@@ -4,40 +4,13 @@
     <title>RaceBox by AirBirds.de</title>
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" >
     <link rel="stylesheet" href="assets/flipclock.css" >
+    <link rel="stylesheet" href="assets/style.css">
     <script src="jquery-2.2.0.min.js" ></script>
     <script src="bootstrap/js/bootstrap.min.js" ></script>
     <script src="serial_connection.js"></script>
     <script src="channel_data.js"></script>
     <script src="moment.min.js"></script>
     <script src="assets/flipclock.min.js"></script>
-     <style>
-       .scrollable{
-         overflow-y:scroll;
-       }
-       .raw_table_data{
-         height: 400px;
-       }
-       .serial_console{
-         height: 200px;
-       }
-       body{
-         margin-top: 85px;
-       }
-       
-      .navbar{
-        min-height: 85px;
-        background-color: black;
-      }
-      html, body {
-        overflow-y: visible;
-      }
-      .navbar{
-        background-color: #f2a900;
-      }
-      #realtime_clock{
-        font-size: 16pt;
-      }
-     </style>
   </head>
   <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -102,7 +75,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="row">
       <div class="col-xs-12">
         <div class="alert alert-success" role="alert" id="message_box" style="display:none"></div>
@@ -110,8 +83,9 @@
           <li role="presentation" class="active"><a href="#tab_time_tracking" aria-controls="tab_time_tracking" role="tab" data-toggle="tab">TimeTracking</a></li>
           <li role="presentation"><a href="#tab_race_box_settings" aria-controls="tab_race_box_settings" role="tab" data-toggle="tab">RaceBox Settings</a></li>
           <li role="presentation"><a href="#tab_settings" aria-controls="tab_settings" role="tab" data-toggle="tab">Settings</a></li>
+          <li role="presentation"><a href="#tab_help" aria-controls="tab_help" role="tab" data-toggle="tab">Help</a></li>
         </ul>
-      
+
       <div class="tab-content">
         <div role="tabpanel" class="tab-pane active" id="tab_time_tracking">
             <div class="panel panel-default">
@@ -163,16 +137,19 @@
         <div role="tabpanel" class="tab-pane" id="tab_race_box_settings">
             <div class="panel panel-default">
               <div class="panel-body">
-                <input type="text" id="input_min_lap_time" placeholder="min lap time, eg: 6000" class="">
-                <button class="btn btn-primary" id="button_set_min_lap_time">Set Min Lap Time</button>
-                <div class="pull-right">
-                  <button class="btn btn-primary" id="button_read_saved_channels">Read Saved Channels</button>
-                  <button class="btn btn-primary" id="button_read_saved_rssi_strength">Read Saved RSSI</button>
+                <p>
+                  <input type="text" id="input_min_lap_time" placeholder="min lap time, eg: 6000" class="">
+                  <button class="btn btn-primary" id="button_set_min_lap_time"><i class="glyphicon glyphicon-upload"></i> Set Min Lap Time</button>
+                  <button class="btn btn-primary" id="button_set_default_values" style="display:none;"><i class="glyphicon glyphicon-check"></i> Set Default Values</button>
+                </p>
+                <p>
+                  <button class="btn btn-primary" id="button_read_saved_channels"><i class="glyphicon glyphicon-download"></i> Read Saved Channels</button>
+                  <button class="btn btn-primary" id="button_read_saved_rssi_strength"><i class="glyphicon glyphicon-download"></i> Read Saved RSSI</button>
                   <button class="btn btn-primary" id="button_read_current_rssi_strength" >Scan Current RSSI</button>
-                  <button class="btn btn-primary" id="button_read_min_lap_time" >Read Min Lap Time</button>
-                  <button class="btn btn-primary" id="button_read_smart_sense" >Read SmartSense</button>
-                  <button class="btn btn-primary" id="button_read_smart_sense_cutt_off" >Read Min SmartSense CutOff</button>
-                </div>
+                  <button class="btn btn-primary" id="button_read_min_lap_time" ><i class="glyphicon glyphicon-download"></i> Read Min Lap Time</button>
+                  <button class="btn btn-primary" id="button_read_smart_sense" ><i class="glyphicon glyphicon-download"></i> Read SmartSense</button>
+                  <button class="btn btn-primary" id="button_read_smart_sense_cutt_off" ><i class="glyphicon glyphicon-download"></i> Read Min SmartSense CutOff</button>
+                </p>
               </div>
             </div>
             <table class="table table-bordered table-striped">
@@ -306,23 +283,45 @@
         </div>
 
         <div role="tabpanel" class="tab-pane" id="tab_settings">
-          <div class="form-group">
-            <label>Max Laps</label>
-            <input type="text" id="setting_max_laps" class="form-control" placeholder: "max laps">
-          </div>
-          <div class="form-group">
-            <label>FPV-SPORTS.IO API-Token</label>
-            <input type="text" id="fpv_sports_api_token" class="form-control" placeholder: "FPV-SPORTS.IO API-Token">
-          </div>
-          <div class="form-group">
-            <label>FPV-SPORTS.IO Racing Event</label>
-            <select id="fpv_sports_racing_events" class="form-control"></select>
-            <button id="btn_fetch_fpv_sports_racing_events" class="btn btn-primary">Fetch FPV-SPORTS.IO racing events</button>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Max Laps</label>
+                <input type="text" id="setting_max_laps" class="form-control" placeholder: "max laps">
+              </div>
+              <div class="form-group">
+                <label>FPV-SPORTS.IO API-Token</label>
+                <input type="text" id="fpv_sports_api_token" class="form-control" placeholder: "FPV-SPORTS.IO API-Token">
+                <p class="help-block">You can find your API token in FPV-SPORTS.IO</p>
+              </div>
+              <div class="form-group">
+                <label>FPV-SPORTS.IO Racing Event</label>
+                <select id="fpv_sports_racing_events" class="form-control"></select>
+                <button id="btn_fetch_fpv_sports_racing_events" class="btn btn-primary">
+                  <i class="glyphicon glyphicon-import"></i> Fetch FPV-SPORTS.IO racing events
+                </button>
+              </div>
+            </div>
           </div>
         </div>
+
+        <div role="tabpanel" class="tab-pane" id="tab_help">
+            <div class="row">
+              <div class="col-md-12">
+                <h1>Documentation &amp; Guides</h1>
+                <p>
+                  You can find an instruction guide on the RaceBox website: <a href="http://airbirds.de/de/produkte/racebox" target="_blank">http://airbirds.de/de/produkte/racebox</a>
+                </p>
+                <h1>Drivers &amp; Firmware</h1>
+                <p>
+                  You can download the drivers for the RaceBox via this link: <a href="http://bit.ly/1r4PF7l" target="_blank">http://bit.ly/1r4PF7l</a>
+                </p>
+              </div>
+            </div>
+        </div>
       </div> <!-- tab content -->
-      
-      
+
+
       </div>
     </div> <!-- row -->
     <div class="row" id="container_serial_output" style="display:none;">
@@ -336,12 +335,12 @@
         </div>
       </div>
     </div>
-  
-    
 
-    
-    
-    
+
+
+
+
+
 
     <script src="util.js"></script>
     <script src="time_tracking_adapter.js"></script>

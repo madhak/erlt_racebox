@@ -23,7 +23,7 @@ function load_channel_data_for_sensors(){
   for(var c= 1; c <= 8; c++){
     var channel_select = document.getElementById("rb_settings_sensor_"+c+"_channel");
     channel_select.innerHTML = '';
-    
+
     var html_data = '';
     for(var i = 0; i < channel_data.length; i++){
         html_data = html_data +'<option value="'+ i +'">' + channel_data[i] + '</option>';
@@ -68,7 +68,7 @@ function convertRSSIToPercent(rssi_strength){
 function playBeep(){
   var myAudio = new Audio();
   myAudio.src = "sfx/beep.mp3";
-  myAudio.play();                  
+  myAudio.play();
 }
 
 function convertMStoKmh(input){
@@ -85,13 +85,13 @@ function convertMStoKmh(input){
 
   return "";
 }
-    
+
 
 
 function log(msg) {
   if(debug_mode == true){
     var buffer = document.querySelector('#serial_output');
-    buffer.innerHTML += msg + '<br/>'; 
+    buffer.innerHTML += msg + '<br/>';
   }
   console.log(msg);
 }
@@ -147,7 +147,7 @@ connection.onReadLine.addListener(function(data) {
   if(cmd_data[0] == "VTX_SENSOR"){ // showing firmware version
     $("#firmware_version").html(cmd_data[1]);
   }
-  
+
   if(cmd_data[0] == "GRSSIS"){
     process_inc_saved_rssi_strength(cmd_data);
   }
@@ -176,7 +176,7 @@ connection.onReadLine.addListener(function(data) {
   if(cmd_data[0] == "CHANNEL"){
     process_inc_vtx_channel(cmd_data);
   }
-  
+
 });
 
 $("#button_save_timing_data").click(function(){
@@ -268,7 +268,7 @@ function update_time_tracking_table(){
     var t_html = "<tr>";
     var t_html = t_html + "<td>" + t['position'] + "</td>";
     var t_html = t_html + "<td>" + t['pilot_name'] + "</td>";
-    
+
 
     for(var l = 0; l < t['lap_data'].length; l++){
       var t_html = t_html + "<td>" + convertMSToTimeString(t['lap_data'][l]['ms']) + "</td>";
@@ -278,7 +278,7 @@ function update_time_tracking_table(){
     html = html + t_html;
   }
   $("#time_tracking_table_body").html(html);
-  
+
 }
 
 function process_inc_smart_sense_strength(data){
@@ -320,11 +320,16 @@ function setup_race_data_by_fpv_sports_race_data(data){
   for(var i = 0; i < fpv_sports_current_race_data.pilots.length; i++){
     time_tracking_adapter.time_tracking_data[i].pilot_name = fpv_sports_current_race_data.pilots[i].pilot_name;
     time_tracking_adapter.time_tracking_data[i].fpv_sports_pilot_id = fpv_sports_current_race_data.pilots[i].pilot_id;
-    
+
   }
 
 
   update_time_tracking_table();
+}
+
+function reset_sensor_to_default_value(sensor){
+  var t = "S_VTX_CH " + sensor +  31 + i ;
+  connection.send(t);
 }
 
 // EVENT HANLDER FOR GUI
@@ -393,6 +398,10 @@ $("#button_stop_race").click(function(){
 $("#button_debug_track_time").click(function(){
   fill_sample_time_data();
 })
+
+$("#button_set_default_values").click(function(){
+  reset_sensor_to_default_value(1);
+});
 
 $("#btn_fetch_fpv_sports_racing_events").click(function(){
   fpv_sports_api.list_racing_events(function(data){

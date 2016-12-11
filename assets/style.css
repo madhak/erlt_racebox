@@ -1,0 +1,45 @@
+.scrollable{
+  overflow-y:scroll;
+}
+.raw_table_data{
+  height: 400px;
+}
+.serial_console{
+  height: 200px;
+}
+body{
+  margin-top: 85px;
+}
+
+.navbar{
+ min-height: 85px;
+ background-color: black;
+}
+html, body {
+ overflow-y: visible;
+}
+
+.navbar{
+ 
+}
+#realtime_clock{
+ font-size: 16pt;
+}
+
+.btn-primary, a.btn-primary, a.btn-primary:link, a.btn-primary:visited, input[type=submit] {
+  background: none;
+  color: #e50042;
+  border: 1px solid #e50042;
+  font-weight: bold;
+}
+
+.btn-primary:hover{
+  background: #e50042;
+  color: black;
+  border: 1px solid #e50042;
+  font-weight: bold;
+}
+
+a:link,a:hover, a:visited {
+  color: #e50042;
+}
