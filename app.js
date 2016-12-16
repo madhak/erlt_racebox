@@ -11,6 +11,9 @@ var debug_mode = false;
 var current_rssi_signal_strength = 0;
 var time_tracking_enabled = false;
 var fpv_sports_current_race_data = null;
+
+var current_com_port = "";
+
 var realtime_clock = $('.realtime-clock').FlipClock({
   autoStart: false,
   clockFace: 'MinuteCounter',
@@ -222,6 +225,7 @@ function start_race_session(){
   time_tracking_enabled = true;
 
   time_tracking_adapter.reset();
+  reset_time_tracking_data();
   update_time_tracking_table();
 }
 
@@ -241,12 +245,13 @@ function stop_race_ression(){
       console.log(data);
     });
   }
-  reset_time_tracking_data();
 }
 
 function process_inc_vtx_channel(data){
   var channel_select = document.getElementById("rb_settings_sensor_"+data[1]+"_channel");
-  channel_select.selectedIndex = data[2];
+  if(channel_select != null){
+    channel_select.selectedIndex = data[2];
+  }
 }
 
 function process_inc_time_tracking(data){
@@ -303,13 +308,15 @@ function process_inc_current_rssi_strength(data){
 }
 
 $("#button_connect").click(function(){
-    connection.connect($("#select_serial_port").val());
+    current_com_port = $("#select_serial_port").val();
+    connection.connect(current_com_port);
 });
 
 connection.onConnect.addListener(function(){
   connected = true;
   $("#connect_panel").hide();
   $("#control_panel").show();
+  document.getElementById("connected_to_device").innerHTML = current_com_port;
   console.log("successfully connected");
   connection.send("INFO\n");
 });
@@ -327,9 +334,34 @@ function setup_race_data_by_fpv_sports_race_data(data){
   update_time_tracking_table();
 }
 
-function reset_sensor_to_default_value(sensor){
-  var t = "S_VTX_CH " + sensor +  31 + i ;
+function setDefaultChannelForSensor(sensor){
+   var t = "S_VTX_CH " + sensor +  31;
+   connection.send(t);
+   console.log(t);
+}
+
+function setDefaultSmartSenseCutOffForSensor(sensor){
+  var t = "SLAVES_SS_SCO " + sensor + " 10 \n";
   connection.send(t);
+  console.log(t);
+}
+
+function reset_sensor_to_default_value(sensor){
+  console.log("reset_sensor_to_default_value " + sensor);
+  setDefaultChannelForSensor(sensor);
+  
+  window.setTimeout(function(){
+    setDefaultSmartSenseCutOffForSensor(sensor);
+  },500);
+  
+
+  if(sensor < 8){
+    window.setTimeout(function(){
+      reset_sensor_to_default_value(sensor +1)
+    }, 1000);
+  }
+  
+ 
 }
 
 // EVENT HANLDER FOR GUI

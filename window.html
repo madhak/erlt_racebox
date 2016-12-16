@@ -55,7 +55,7 @@
                 </select>
               </div>
               <span id="helpBlock" class="help-block">
-                Drivers can be found <a href="http://bit.ly/1r4PF7l" target="_blank">here</a>. Firmware flashing tool can be found <a href="http://russemotto.com/xloader/" target="_blank">here</a>
+                Drivers can be found <a href="http://airbirds.de/produkte/racebox" target="_blank">here</a>. Firmware flashing tool can be found <a href="http://russemotto.com/xloader/" target="_blank">here</a>
                 </span>
             </div>
           </div>
@@ -64,10 +64,14 @@
           <div class="panel-body">
             <div class="row">
               <div class="col-xs-3">
-                Firmware:
-                <span id="firmware_version"></span>
+                Conntected to:
+                <span id="connected_to_device"></span>
               </div>
-              <div class="col-xs-9">
+              <div class="col-xs-3">
+                Firmware:
+                <span id="firmware_version">1.0</span>
+              </div>
+              <div class="col-xs-3">
                 <button class="btn btn-danger" id="button_disconnect">Disconnect</button>
               </div>
             </div>
@@ -144,7 +148,7 @@
                 </p>
                 <p>
                   <button class="btn btn-primary" id="button_read_saved_channels"><i class="glyphicon glyphicon-download"></i> Read Saved Channels</button>
-                  <button class="btn btn-primary" id="button_read_saved_rssi_strength"><i class="glyphicon glyphicon-download"></i> Read Saved RSSI</button>
+                  <button class="btn btn-primary" id="button_read_saved_rssi_strength"><i class="glyphicon glyphicon-download"></i> Read Safety RSSI</button>
                   <button class="btn btn-primary" id="button_read_current_rssi_strength" >Scan Current RSSI</button>
                   <button class="btn btn-primary" id="button_read_min_lap_time" ><i class="glyphicon glyphicon-download"></i> Read Min Lap Time</button>
                   <button class="btn btn-primary" id="button_read_smart_sense" ><i class="glyphicon glyphicon-download"></i> Read SmartSense</button>
@@ -157,7 +161,7 @@
                   <tr>
                       <th>Sensor</th>
                       <th>VTX Channel</th>
-                      <th>Trigger RSSI</th>
+                      <th>Safety RSSI</th>
                       <th>Current RSSI</th>
                       <th>Min Lap Time (ms)</th>
                       <th>SmartSense Strength</th>
@@ -175,9 +179,23 @@
                     <td><input type="text" class="form-control" id="rb_settings_sensor_1_smart_sense_strength" readonly></td>
                     <td><input type="text" class="form-control" id="rb_settings_sensor_1_smart_sense_cut_off" ></td>
                     <td>
-                      <button class="btn btn-primary btn_set_saved_rssi_strength btn-xs" rel="1">Save RSSI Strength</button>
-                      <button class="btn btn-primary btn_set_smart_sense_cut_off btn-xs" rel="1">Save CutOff</button>
-                      <button class="btn btn-primary btn_set_channel btn-xs" rel="1">Save Channel</button>
+                      <div class="dropdown">
+                        <button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" id="dLabel" type="button">
+                          Sensor 1 Actions
+                          <span class="caret"></span>
+                        </button>
+                        <ul aria-labelledby="dLabel" class="dropdown-menu">
+                          <li>
+                            <a class="btn_set_saved_rssi_strength" rel="1">Save RSSI Strength</a>
+                          </li>
+                          <li>
+                            <a  class="btn_set_smart_sense_cut_off" rel="1">Save CutOff</a>
+                          <li>
+                          <li>
+                            <a class= "btn_set_channel" rel="1">Save Channel</a>
+                          </li>
+                        </ul>
+                      </div>
                     </td>
                   </tr>
                   <tr>
@@ -189,9 +207,23 @@
                     <td><input type="text" class="form-control" id="rb_settings_sensor_2_smart_sense_strength" readonly></td>
                     <td><input type="text" class="form-control" id="rb_settings_sensor_2_smart_sense_cut_off" ></td>
                     <td>
-                      <button class="btn btn-primary btn_set_saved_rssi_strength btn-xs" rel="2">Save RSSI Strength</button>
-                      <button class="btn btn-primary btn_set_smart_sense_cut_off btn-xs" rel="2">Save CutOff</button>
-                      <button class="btn btn-primary btn_set_channel btn-xs" rel="2">Save Channel</button>
+                      <div class="dropdown">
+                        <button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" id="dLabel" type="button">
+                          Sensor 2 Actions
+                          <span class="caret"></span>
+                        </button>
+                        <ul aria-labelledby="dLabel" class="dropdown-menu">
+                          <li>
+                            <a class="btn_set_saved_rssi_strength" rel="2">Save RSSI Strength</a>
+                          </li>
+                          <li>
+                            <a  class="btn_set_smart_sense_cut_off" rel="2">Save CutOff</a>
+                          <li>
+                          <li>
+                            <a class= "btn_set_channel" rel="2">Save Channel</a>
+                          </li>
+                        </ul>
+                      </div>
                     </td>
                   </tr>
                   <tr>
@@ -203,9 +235,23 @@
                     <td><input type="text" class="form-control" id="rb_settings_sensor_3_smart_sense_strength" readonly></td>
                     <td><input type="text" class="form-control" id="rb_settings_sensor_3_smart_sense_cut_off" ></td>
                     <td>
-                      <button class="btn btn-primary btn_set_saved_rssi_strength btn-xs" rel="3">Save RSSI Strength</button>
-                      <button class="btn btn-primary btn_set_smart_sense_cut_off btn-xs" rel="3">Save CutOff</button>
-                      <button class="btn btn-primary btn_set_channel btn-xs" rel="3">Save Channel</button>
+                      <div class="dropdown">
+                        <button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" id="dLabel" type="button">
+                          Sensor 3 Actions
+                          <span class="caret"></span>
+                        </button>
+                        <ul aria-labelledby="dLabel" class="dropdown-menu">
+                          <li>
+                            <a class="btn_set_saved_rssi_strength" rel="3">Save RSSI Strength</a>
+                          </li>
+                          <li>
+                            <a  class="btn_set_smart_sense_cut_off" rel="3">Save CutOff</a>
+                          <li>
+                          <li>
+                            <a class= "btn_set_channel" rel="3">Save Channel</a>
+                          </li>
+                        </ul>
+                      </div>
                     </td>
                   </tr>
                   <tr>
@@ -217,9 +263,23 @@
                     <td><input type="text" class="form-control" id="rb_settings_sensor_4_smart_sense_strength" readonly></td>
                     <td><input type="text" class="form-control" id="rb_settings_sensor_4_smart_sense_cut_off" ></td>
                     <td>
-                      <button class="btn btn-primary btn_set_saved_rssi_strength btn-xs" rel="4">Save RSSI Strength</button>
-                      <button class="btn btn-primary btn_set_smart_sense_cut_off btn-xs" rel="4">Save CutOff</button>
-                      <button class="btn btn-primary btn_set_channel btn-xs" rel="4">Save Channel</button>
+                      <div class="dropdown">
+                        <button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" id="dLabel" type="button">
+                          Sensor 4 Actions
+                          <span class="caret"></span>
+                        </button>
+                        <ul aria-labelledby="dLabel" class="dropdown-menu">
+                          <li>
+                            <a class="btn_set_saved_rssi_strength" rel="4">Save RSSI Strength</a>
+                          </li>
+                          <li>
+                            <a  class="btn_set_smart_sense_cut_off" rel="4">Save CutOff</a>
+                          <li>
+                          <li>
+                            <a class= "btn_set_channel" rel="4">Save Channel</a>
+                          </li>
+                        </ul>
+                      </div>
                     </td>
                   </tr>
                   <tr>
@@ -231,9 +291,23 @@
                     <td><input type="text" class="form-control" id="rb_settings_sensor_5_smart_sense_strength" readonly></td>
                     <td><input type="text" class="form-control" id="rb_settings_sensor_5_smart_sense_cut_off" ></td>
                     <td>
-                      <button class="btn btn-primary btn_set_saved_rssi_strength btn-xs" rel="5">Save RSSI Strength</button>
-                      <button class="btn btn-primary btn_set_smart_sense_cut_off btn-xs" rel="5">Save CutOff</button>
-                      <button class="btn btn-primary btn_set_channel btn-xs" rel="5">Save Channel</button>
+                      <div class="dropdown">
+                        <button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" id="dLabel" type="button">
+                          Sensor 5 Actions
+                          <span class="caret"></span>
+                        </button>
+                        <ul aria-labelledby="dLabel" class="dropdown-menu">
+                          <li>
+                            <a class="btn_set_saved_rssi_strength" rel="5">Save RSSI Strength</a>
+                          </li>
+                          <li>
+                            <a  class="btn_set_smart_sense_cut_off" rel="5">Save CutOff</a>
+                          <li>
+                          <li>
+                            <a class= "btn_set_channel" rel="5">Save Channel</a>
+                          </li>
+                        </ul>
+                      </div>
                     </td>
                   </tr>
                   <tr>
@@ -245,9 +319,23 @@
                     <td><input type="text" class="form-control" id="rb_settings_sensor_6_smart_sense_strength" readonly></td>
                     <td><input type="text" class="form-control" id="rb_settings_sensor_6_smart_sense_cut_off" ></td>
                     <td>
-                      <button class="btn btn-primary btn_set_saved_rssi_strength btn-xs" rel="6">Save RSSI Strength</button>
-                      <button class="btn btn-primary btn_set_smart_sense_cut_off btn-xs" rel="6">Save CutOff</button>
-                      <button class="btn btn-primary btn_set_channel btn-xs" rel="6">Save Channel</button>
+                      <div class="dropdown">
+                        <button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" id="dLabel" type="button">
+                          Sensor 6 Actions
+                          <span class="caret"></span>
+                        </button>
+                        <ul aria-labelledby="dLabel" class="dropdown-menu">
+                          <li>
+                            <a class="btn_set_saved_rssi_strength" rel="6">Save RSSI Strength</a>
+                          </li>
+                          <li>
+                            <a  class="btn_set_smart_sense_cut_off" rel="6">Save CutOff</a>
+                          <li>
+                          <li>
+                            <a class= "btn_set_channel" rel="6">Save Channel</a>
+                          </li>
+                        </ul>
+                      </div>
                     </td>
                   </tr>
                   <tr>
@@ -259,9 +347,23 @@
                     <td><input type="text" class="form-control" id="rb_settings_sensor_7_smart_sense_strength" readonly></td>
                     <td><input type="text" class="form-control" id="rb_settings_sensor_7_smart_sense_cut_off" ></td>
                     <td>
-                      <button class="btn btn-primary btn_set_saved_rssi_strength  btn-xs" rel="7">Save RSSI Strength</button>
-                      <button class="btn btn-primary btn_set_smart_sense_cut_off btn-xs" rel="7">Save CutOff</button>
-                      <button class="btn btn-primary btn_set_channel btn-xs" rel="7">Save Channel</button>
+                      <div class="dropdown">
+                        <button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" id="dLabel" type="button">
+                          Sensor 7 Actions
+                          <span class="caret"></span>
+                        </button>
+                        <ul aria-labelledby="dLabel" class="dropdown-menu">
+                          <li>
+                            <a class="btn_set_saved_rssi_strength" rel="7">Save RSSI Strength</a>
+                          </li>
+                          <li>
+                            <a  class="btn_set_smart_sense_cut_off" rel="7">Save CutOff</a>
+                          <li>
+                          <li>
+                            <a class= "btn_set_channel" rel="7">Save Channel</a>
+                          </li>
+                        </ul>
+                      </div>
                     </td>
                   </tr>
                   <tr>
@@ -273,9 +375,23 @@
                     <td><input type="text" class="form-control" id="rb_settings_sensor_8_smart_sense_strength" readonly></td>
                     <td><input type="text" class="form-control" id="rb_settings_sensor_8_smart_sense_cut_off" ></td>
                     <td>
-                      <button class="btn btn-primary btn_set_saved_rssi_strength  btn-xs" rel="8">Save RSSI Strength</button>
-                      <button class="btn btn-primary btn_set_smart_sense_cut_off  btn-xs" rel="8">Save CutOff</button>
-                      <button class="btn btn-primary btn_set_channel btn-xs" rel="8">Save Channel</button>
+                      <div class="dropdown">
+                        <button aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" id="dLabel" type="button">
+                          Sensor 8 Actions
+                          <span class="caret"></span>
+                        </button>
+                        <ul aria-labelledby="dLabel" class="dropdown-menu">
+                          <li>
+                            <a class="btn_set_saved_rssi_strength" rel="8">Save RSSI Strength</a>
+                          </li>
+                          <li>
+                            <a  class="btn_set_smart_sense_cut_off" rel="8">Save CutOff</a>
+                          <li>
+                          <li>
+                            <a class= "btn_set_channel" rel="8">Save Channel</a>
+                          </li>
+                        </ul>
+                      </div>
                     </td>
                   </tr>
               </tbody>
@@ -314,7 +430,18 @@
                 </p>
                 <h1>Drivers &amp; Firmware</h1>
                 <p>
-                  You can download the drivers for the RaceBox via this link: <a href="http://bit.ly/1r4PF7l" target="_blank">http://bit.ly/1r4PF7l</a>
+                  You can download the drivers for the RaceBox via this link: <a href="http://airbirds.de/produkte/racebox" target="_blank">http://airbirds.de/produkte/racebox</a>
+                </p>
+                <h1>SmartSense</h1>
+                <p>
+                  VTX transmitters have different output power on their channels. So the timing for each unit would be different. SmartSense tries to compensate this by computing all the time the highest  RSSI signal it gets from an unit. The minimum RSSI signal gets increased internally by the box, so that the minimum RSSI trigger strength is the highest value it computed minus the SmartSense CutOff value.
+                  <br><br>
+                  <strong>Example CutOff values</strong>
+                  <ul>
+                    <li>CutOff value 5 ~ 0 - 50cm</li>
+                    <li>CutOff value 10 ~ ca. 0 - 1m</li>
+                    <li>CutOff value 20 ~ ca. 0 - 3m</li>
+                  </ul>
                 </p>
               </div>
             </div>
@@ -335,10 +462,6 @@
         </div>
       </div>
     </div>
-
-
-
-
 
 
 
