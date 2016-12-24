@@ -1,0 +1,12 @@
+{
+  "name": "RaceBox",
+  "main": "window.html",
+  "version": "0.8b1",
+  "window": {
+    "icon": "icon-196.png",
+    "toolbar": true,
+    "frame": true,
+    "min_width": 1400,
+    "min_height": 800
+  }
+}

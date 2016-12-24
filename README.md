@@ -1,6 +1,8 @@
 # EasyRaceLapTimer RaceBox
 
-This is the offical Chrome App for the [EasyRaceLapTimer RaceBox](https://www.airbirds-shop.de/de/easyracelaptimer/37-easyracelaptimer-easyracelaptimer-racebox.html) from [AirBirds](http://www.airbirds.de).
+This is the offical App for the [EasyRaceLapTimer RaceBox](https://www.airbirds-shop.de/de/easyracelaptimer/37-easyracelaptimer-easyracelaptimer-racebox.html) from [AirBirds](http://www.airbirds.de).
+
+NOTE: This is no longer a Google chrome app but a stand alone application
 
 
 ## SmartSense - What the heck is SmartSense? ##
@@ -63,3 +65,8 @@ SmartSense Get CutOff - gets the saved cuf off value for all receivers
     SLAVES_SS_SCO X Y
 
 SmartSense Set CutOff - sets the cut off value Y for receiver X
+
+
+    VERSION
+
+Returns masters and all sensor firmware version (implemented in version 1.1)

@@ -19,7 +19,28 @@ var realtime_clock = $('.realtime-clock').FlipClock({
   clockFace: 'MinuteCounter',
 });
 
-document.title = "EasyRaceLapTimer PocketEdition";
+document.title = "EasyRaceLapTimer RaceBox by AirBirds.de";
+
+function build_menu_bar(){
+  // Create an empty menubar
+  var menu = new nw.Menu({type: 'menubar'});
+
+  // Create a submenu as the 2nd level menu
+  var submenu = new nw.Menu();
+  mi_save_timing_data = new nw.MenuItem({ label: 'Export timing data to JSON' });
+  mi_save_timing_data.click = save_timing_data;
+
+  submenu.append(mi_save_timing_data);
+
+  // Create and append the 1st level menu to the menubar
+  menu.append(new nw.MenuItem({
+    label: 'File',
+    submenu: submenu
+  }));
+
+  // Assign it to `window.menu` to get the menu displayed
+  nw.Window.get().menu = menu;
+}
 
 function load_channel_data_for_sensors(){
 
@@ -31,16 +52,20 @@ function load_channel_data_for_sensors(){
     for(var i = 0; i < channel_data.length; i++){
         html_data = html_data +'<option value="'+ i +'">' + channel_data[i] + '</option>';
     }
+
+    html_data = html_data +'<option value="">Custom Frequency</option>';
     channel_select.innerHTML = html_data;
   }
 }
 
 function show_message(msg){
   $("#message_box").show();
-  $("#message_box").html(msg);
-  $("message_box").fadeOut( "slow", function() {
-  });
+  $("#message_box_content").html(msg);
 }
+
+$("#btn_message_box_close").click(function(){
+  $("#message_box").hide();
+});
 
 function fill_sample_time_data(){
   for(var i = 0; i < time_tracking_adapter.listing().length; i++){
@@ -182,7 +207,7 @@ connection.onReadLine.addListener(function(data) {
 
 });
 
-$("#button_save_timing_data").click(function(){
+var save_timing_data = function(){
 
  chrome.fileSystem.chooseEntry({type: 'saveFile', suggestedName:"race_box_export.json",accepts:[{extensions: ['json']}]}, function(theEntry) {
    if(chrome.runtime.lastError) {
@@ -212,7 +237,7 @@ $("#button_save_timing_data").click(function(){
       });
    });
  });
-});
+}
 
 function start_race_session(){
   realtime_clock.reset();
@@ -237,6 +262,8 @@ function stop_race_ression(){
 
   time_tracking_enabled = false;
 
+  database.addRaceResults(time_tracking_adapter.time_tracking_data); // adding the data to the database for later usage
+
   // publish data to fpv-sports
   if(fpv_sports_current_race_data != null){
     var racing_event_id = $("#fpv_sports_racing_events").val();
@@ -250,7 +277,18 @@ function stop_race_ression(){
 function process_inc_vtx_channel(data){
   var channel_select = document.getElementById("rb_settings_sensor_"+data[1]+"_channel");
   if(channel_select != null){
-    channel_select.selectedIndex = data[2];
+    var c = parseInt(data[2]);
+    console.log("received channel " + c + " for sensor " + data[1]);
+
+    if(c > 100){
+      console.log("setting custom select");
+      $('#rb_settings_sensor_'+data[1]+'_channel option:last-child').val(c);
+      $('#rb_settings_sensor_'+data[1]+'_channel option:last-child').html("Custom: " + c + " Mhz");
+      $('#rb_settings_sensor_'+data[1]+'_channel option:last-child').prop('selected', true);
+    }else{
+      channel_select.selectedIndex = c;
+    }
+    
   }
 }
 
@@ -463,6 +501,15 @@ $("#button_read_smart_sense_cutt_off").click(function(){
   connection.send("SLAVES_SS_GCO\n");
 })
 
+$(".btn_set_custom_channel").click(function(){
+  var freq = prompt("Please enter Mhz frequency for the custom channel");
+
+  var t = "S_VTX_CH " + $(this).attr("rel") + " "+ freq +"\n";
+  console.log(t);
+  connection.send(t);
+  show_message("Custom Channel saved");
+});
+
 $("#fpv_sports_api_token").change(function(){
    chrome.storage.sync.set({
     fpv_sports_api_token: $(this).val()
@@ -483,8 +530,48 @@ $("#setting_max_laps").change(function(){
   time_tracking_adapter.max_laps = $(this).val();
 });
 
+$("#btn_list_past_races").on("click",function(){
+  database.pouch_db.allDocs({include_docs: true, descending: true}, function(err, doc) {
+    document.getElementById("past_races_container").innerHTML = "";
+    for(var row = 0; row < doc.rows.length; row++){
+      
+      var header = document.createElement("h2");
+      header.innerHTML = moment(doc.rows[row].doc._id).format('MMMM Do YYYY, h:mm:ss a');
+      document.getElementById("past_races_container").appendChild(header);
+
+      var table = document.createElement("table");
+      table.className = "table table-striped table-bordered";
+
+      var html = "";
+      html = html + '<thead><tr><th>Pos</th><th>Pilot</th><th>Lap 1</th><th>Lap 2</th><th>Lap 3</th><th>Lap 4</th><th>Lap 5</th><th>Lap 6</th></tr></thead><tbody>';
+      for(var channel = 0; channel < 8; channel++){
+        var t = doc.rows[row].doc.race_data[channel];
+
+        var t_html = "<tr>";
+        var t_html = t_html + "<td>" + t['position'] + "</td>";
+        var t_html = t_html + "<td>" + t['pilot_name'] + "</td>";
+
+
+        for(var l = 0; l < t['lap_data'].length; l++){
+          var t_html = t_html + "<td>" + convertMSToTimeString(t['lap_data'][l]['ms']) + "</td>";
+        }
+
+        var t_html = t_html + "</tr>";
+        html = html + t_html;
+      }
+
+      table.innerHTML = html + "</tbody>";
+      document.getElementById("past_races_container").appendChild(table);
+    }
+  });
+
+});
+
+// initializing everything
 reset_time_tracking_data();
 load_channel_data_for_sensors();
+build_menu_bar();
+database.init();
 
 // reading stored values
 chrome.storage.sync.get({

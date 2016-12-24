@@ -1,0 +1,1 @@
+ nwbuild.cmd -p win32,win64,osx64 .

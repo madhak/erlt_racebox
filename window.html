@@ -10,6 +10,8 @@
     <script src="serial_connection.js"></script>
     <script src="channel_data.js"></script>
     <script src="moment.min.js"></script>
+    <script src="pouchdb-6.1.0.min.js"></script>
+    <script src="database.js"></script>
     <script src="assets/flipclock.min.js"></script>
   </head>
   <body>
@@ -82,11 +84,17 @@
 
     <div class="row">
       <div class="col-xs-12">
-        <div class="alert alert-success" role="alert" id="message_box" style="display:none"></div>
+        <div class="alert alert-success" role="alert" id="message_box" style="display:none">
+          <button type="button" class="close" id="btn_message_box_close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <div id="message_box_content"></div>
+        </div>
         <ul class="nav nav-tabs" role="tablist">
           <li role="presentation" class="active"><a href="#tab_time_tracking" aria-controls="tab_time_tracking" role="tab" data-toggle="tab">TimeTracking</a></li>
           <li role="presentation"><a href="#tab_race_box_settings" aria-controls="tab_race_box_settings" role="tab" data-toggle="tab">RaceBox Settings</a></li>
           <li role="presentation"><a href="#tab_settings" aria-controls="tab_settings" role="tab" data-toggle="tab">Settings</a></li>
+          <li role="presentation"><a href="#tab_races" aria-controls="tab_races" role="tab" data-toggle="tab">Races</a></li>
           <li role="presentation"><a href="#tab_help" aria-controls="tab_help" role="tab" data-toggle="tab">Help</a></li>
         </ul>
 
@@ -101,10 +109,6 @@
                     </div>
                   </div>
                   <div class="col-md-9">
-                    <button class="btn btn-primary" id="button_save_timing_data">
-                      <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
-                      Save Timing Data
-                    </button>
                     <button class="btn btn-primary" id="button_start_fpv_sports_io_race">
                       <span class="glyphicon glyphicon-fast-forward" aria-hidden="true"></span>
                       Start FPV-SPORTS.IO Race
@@ -194,6 +198,9 @@
                           <li>
                             <a class= "btn_set_channel" rel="1">Save Channel</a>
                           </li>
+                          <li>
+                            <a class="btn_set_custom_channel" rel="1">Set Custom Channel</a>
+                          </li>
                         </ul>
                       </div>
                     </td>
@@ -221,6 +228,9 @@
                           <li>
                           <li>
                             <a class= "btn_set_channel" rel="2">Save Channel</a>
+                          </li>
+                          <li>
+                            <a class="btn_set_custom_channel" rel="2">Set Custom Channel</a>
                           </li>
                         </ul>
                       </div>
@@ -250,6 +260,9 @@
                           <li>
                             <a class= "btn_set_channel" rel="3">Save Channel</a>
                           </li>
+                          <li>
+                            <a class="btn_set_custom_channel" rel="3">Set Custom Channel</a>
+                          </li>
                         </ul>
                       </div>
                     </td>
@@ -277,6 +290,9 @@
                           <li>
                           <li>
                             <a class= "btn_set_channel" rel="4">Save Channel</a>
+                          </li>
+                          <li>
+                            <a class="btn_set_custom_channel" rel="4">Set Custom Channel</a>
                           </li>
                         </ul>
                       </div>
@@ -306,6 +322,9 @@
                           <li>
                             <a class= "btn_set_channel" rel="5">Save Channel</a>
                           </li>
+                          <li>
+                            <a class="btn_set_custom_channel" rel="5">Set Custom Channel</a>
+                          </li>
                         </ul>
                       </div>
                     </td>
@@ -333,6 +352,9 @@
                           <li>
                           <li>
                             <a class= "btn_set_channel" rel="6">Save Channel</a>
+                          </li>
+                          <li>
+                            <a class="btn_set_custom_channel" rel="6">Set Custom Channel</a>
                           </li>
                         </ul>
                       </div>
@@ -362,6 +384,9 @@
                           <li>
                             <a class= "btn_set_channel" rel="7">Save Channel</a>
                           </li>
+                          <li>
+                            <a class="btn_set_custom_channel" rel="7">Set Custom Channel</a>
+                          </li>
                         </ul>
                       </div>
                     </td>
@@ -389,6 +414,9 @@
                           <li>
                           <li>
                             <a class= "btn_set_channel" rel="8">Save Channel</a>
+                          </li>
+                          <li>
+                            <a class="btn_set_custom_channel" rel="8">Set Custom Channel</a>
                           </li>
                         </ul>
                       </div>
@@ -419,6 +447,19 @@
               </div>
             </div>
           </div>
+        </div>
+
+        <div role="tabpanel" class="tab-pane" id="tab_races">
+            <div class="row">
+              <div class="col-md-12">
+                <button class="btn btn-primary" id="btn_list_past_races">
+                  <span class="glyphicon glyphicon-list-alt"></span>
+                  List past races
+                </button>
+                <div id="past_races_container">
+                </div>
+              </div>
+            </div>
         </div>
 
         <div role="tabpanel" class="tab-pane" id="tab_help">
@@ -464,6 +505,24 @@
     </div>
 
 
+    <!-- set custom channel dialog -->
+    <div class="modal" tabindex="-1" role="dialog" id="custom_channel_dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Set Custom Channel</h4>
+          </div>
+          <div class="modal-body">
+            <p>One fine body&hellip;</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <script src="util.js"></script>
     <script src="time_tracking_adapter.js"></script>
