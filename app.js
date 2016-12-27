@@ -1,3 +1,4 @@
+const version_str = "0.8b2"
 const const_scanning_table_channel_index = 1;
 const const_scanning_table_channel_strength = 2;
 const const_time_tracking_channel_index = 1;
@@ -19,7 +20,7 @@ var realtime_clock = $('.realtime-clock').FlipClock({
   clockFace: 'MinuteCounter',
 });
 
-document.title = "EasyRaceLapTimer RaceBox by AirBirds.de";
+document.title = "EasyRaceLapTimer RaceBox v"+ version_str +" by AirBirds.de";
 
 function build_menu_bar(){
   // Create an empty menubar
@@ -38,6 +39,16 @@ function build_menu_bar(){
     submenu: submenu
   }));
 
+  var debug_sub_menu = new nw.Menu();
+  mi_generate_sample_data = new nw.MenuItem({ label: 'generate sample data' });
+  mi_generate_sample_data.click = fill_sample_time_data;
+  debug_sub_menu.append(mi_generate_sample_data);
+
+  menu.append(new nw.MenuItem({
+    label: 'Debug',
+    submenu: debug_sub_menu
+  }));
+  
   // Assign it to `window.menu` to get the menu displayed
   nw.Window.get().menu = menu;
 }
@@ -268,8 +279,12 @@ function stop_race_ression(){
   if(fpv_sports_current_race_data != null){
     var racing_event_id = $("#fpv_sports_racing_events").val();
     data = time_tracking_adapter.fpv_sports_results(fpv_sports_current_race_data);
-    fpv_sports_api.publish_results(racing_event_id,data,function(data){
-      console.log(data);
+    fpv_sports_api.publish_results(racing_event_id,data,function(success,msg){
+      if(success){
+        show_message("successfully pushed data to FPV-SPORTS.IO");
+      }else{
+        show_message("FAILED to pushed data to FPV-SPORTS.IO: " + msg);
+      }
     });
   }
 }
@@ -454,7 +469,6 @@ $("#button_reset_timing_data").click(function(){
 
 if(debug_mode == true){
   $("#container_serial_output").show();
-  $("#menu_debug").show();
 }
 
 $("#button_start_race").click(function(){
@@ -464,10 +478,6 @@ $("#button_start_race").click(function(){
 $("#button_stop_race").click(function(){
   stop_race_ression();
 });
-
-$("#button_debug_track_time").click(function(){
-  fill_sample_time_data();
-})
 
 $("#button_set_default_values").click(function(){
   reset_sensor_to_default_value(1);

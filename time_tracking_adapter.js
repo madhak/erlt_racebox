@@ -105,7 +105,13 @@ time_tracking_adapter.total_time_of_pilot = function(index){
 }
 
 time_tracking_adapter.fastest_lap_time = function(index){
-  var t = this.time_tracking_data[index]['lap_data'][0]['ms'];
+  // no data available
+  if(this.time_tracking_data[index]['lap_data'].length <= 0){
+    return 0;
+  }
+
+
+  var t = 60 * 60 * 60;
 
   for(var i = 0; i < this.time_tracking_data[index]['lap_data'].length; i++){
     if(this.time_tracking_data[index]['lap_data'][i]['ms'] < t){
@@ -117,7 +123,7 @@ time_tracking_adapter.fastest_lap_time = function(index){
 }
 
 time_tracking_adapter.fastest_lap_num = function(index){
-  var t = this.time_tracking_data[index]['lap_data'][0]['ms'];
+  var t = 60 * 60 * 60;
   var lap_num = 0;
 
   for(var i = 0; i < this.time_tracking_data[index]['lap_data'].length; i++){

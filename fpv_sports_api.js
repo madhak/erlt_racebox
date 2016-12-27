@@ -39,9 +39,10 @@ fpv_sports_api.publish_results = function(racing_event_id,results,callback){
         contentType: "application/json; charset=utf-8"
     })           
     .done(function (data) {
-      callback(data);
+      callback(true,"");
     })
     .fail(function (jqXHR, textStatus) {
-      alert("error: " + textStatus);
+      console.log("error: " + textStatus);
+      callback(false,textStatus);
     });
 }
