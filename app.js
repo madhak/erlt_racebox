@@ -142,8 +142,6 @@ function reset_time_tracking_data(){
   $("#serial_output").html(""); // clear the logs
 }
 
-
-
 function waitForIO(writer, callback) {
   // set a watchdog to avoid eventual locking:
   var start = Date.now();
@@ -165,7 +163,38 @@ function waitForIO(writer, callback) {
   setTimeout(reentrant, 100);
 }
 
+/* Function play beep countdown */
+function play_beep_count(){
+  var Beep_count = document.createElement("audio");
+  Beep_count.src="./sfx/Beep_count.wav";
+  Beep_count.volume=1.00;
+  Beep_count.autoPlay=false;
+  Beep_count.preLoad=true;
+  Beep_count.play();
+}
 
+
+/*Function play beep start*/
+function play_beep_start(){
+  var Beep_start = document.createElement("audio");
+  Beep_start.src="./sfx/Beep_start.wav";
+  Beep_start.volume=1.00;
+  Beep_start.autoPlay=false;
+  Beep_start.preLoad=true;
+  Beep_start.play();
+}
+
+/* Function Start random countdown */
+function start_random_countdown(){
+  var rand = Math.floor(Math.random() * 4) + 3;
+    
+  var t = 3 + rand;
+  for(var i=3; i<=t; i++){
+    setTimeout(play_beep_count(), 1000);
+  } 
+  
+  setTimeout(play_beep_start(), 1000);
+}
 
 
 connection.onConnect.addListener(function() {
@@ -251,12 +280,19 @@ var save_timing_data = function(){
 }
 
 function start_race_session(){
+  
   realtime_clock.reset();
   realtime_clock.start(function(){});
   connection.send("RST_TIMING\n");
   $("#button_start_race").hide();
+  $('#checkbox_random_startup').hide();
   $("#button_start_fpv_sports_io_race").hide();
   $("#button_stop_race").show();
+
+  if($("#checkbox_random_startup").is(':checked')) {
+     //checked
+     start_random_countdown();
+ }
 
   time_tracking_enabled = true;
 
@@ -269,6 +305,7 @@ function stop_race_ression(){
   realtime_clock.stop();
   $("#button_start_race").show();
   $("#button_start_fpv_sports_io_race").show();
+  $('#checkbox_random_startup').show();
   $("#button_stop_race").hide();
 
   time_tracking_enabled = false;

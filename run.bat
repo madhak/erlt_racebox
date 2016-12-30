@@ -1,1 +1,1 @@
-D:\development\nwjs-sdk-v0.19.3-win-x64\nw.exe .
+D:\developpement\nwjs-sdk-v0.19.4-win-x64\nw.exe .
