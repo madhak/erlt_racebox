@@ -290,6 +290,7 @@ function start_race_session(){
   connection.send("RST_TIMING\n");
   $("#button_start_race").hide();
   $("#checkbox_random_startup").hide();
+  $("#span_random_startup").hide();
   $("#button_start_fpv_sports_io_race").hide();
   $("#button_stop_race").show();
 
@@ -310,7 +311,8 @@ function stop_race_ression(){
   realtime_clock.stop();
   $("#button_start_race").show();
   $("#button_start_fpv_sports_io_race").show();
-  $('#checkbox_random_startup').show();
+  $("#checkbox_random_startup").show();
+  $("#span_random_startup").show();
   $("#button_stop_race").hide();
 
   time_tracking_enabled = false;
