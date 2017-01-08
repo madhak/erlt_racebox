@@ -125,8 +125,6 @@ function convertMStoKmh(input){
   return "";
 }
 
-
-
 function log(msg) {
   if(debug_mode == true){
     var buffer = document.querySelector('#serial_output');
@@ -141,8 +139,6 @@ function reset_time_tracking_data(){
   update_time_tracking_table();
   $("#serial_output").html(""); // clear the logs
 }
-
-
 
 function waitForIO(writer, callback) {
   // set a watchdog to avoid eventual locking:
@@ -165,8 +161,47 @@ function waitForIO(writer, callback) {
   setTimeout(reentrant, 100);
 }
 
+/* Function play beep countdown */
+function play_beep_count(){
+  var Beep_count = document.createElement("audio");
+  Beep_count.src="sfx/Beep_count.wav";
+  Beep_count.preLoad=true;
+  Beep_count.play();
+}
 
+/*Function play beep start*/
+function play_beep_start(){
+  var Beep_start = document.createElement("audio");
+  Beep_start.src="sfx/Beep_start.wav";
+  Beep_start.preLoad=true;
+  Beep_start.play();
+}
 
+/* Function random countdown */
+function repeat_beep_count(callback, interval, repetitions, immediate) {
+  function repeater(repetitions) {
+    if (repetitions >= 0) {
+      callback.call(this);
+      setTimeout(function () {
+        repeater(--repetitions)
+      }, interval);
+      if (repetitions == 0) {
+        setTimeout(function () {
+          play_beep_start()
+        }, interval);
+      }
+    }
+  }
+  repetitions = repetitions || 0;
+  interval = interval || 1000;
+  if (immediate) {
+    repeater(--repetitions)
+  } else {
+    setTimeout(function () {
+      repeater(--repetitions)
+    }, interval)
+  }
+}
 
 connection.onConnect.addListener(function() {
   log('connected');
@@ -240,7 +275,6 @@ var save_timing_data = function(){
     writer.onerror = function(e){console.log(e)};
     writer.onwriteend = function(){};
 
-
     writer.truncate(blob.size);
     waitForIO(writer, function() {
         writer.seek(0);
@@ -255,8 +289,16 @@ function start_race_session(){
   realtime_clock.start(function(){});
   connection.send("RST_TIMING\n");
   $("#button_start_race").hide();
+  $("#checkbox_random_startup").hide();
+  $("#span_random_startup").hide();
   $("#button_start_fpv_sports_io_race").hide();
   $("#button_stop_race").show();
+
+  if($("#checkbox_random_startup").is(':checked')) {
+    //checked
+    var rand = Math.floor(Math.random() * 4) + 3;
+    repeat_beep_count(play_beep_count,1000,rand);
+  }
 
   time_tracking_enabled = true;
 
@@ -269,6 +311,8 @@ function stop_race_ression(){
   realtime_clock.stop();
   $("#button_start_race").show();
   $("#button_start_fpv_sports_io_race").show();
+  $("#checkbox_random_startup").show();
+  $("#span_random_startup").show();
   $("#button_stop_race").hide();
 
   time_tracking_enabled = false;
