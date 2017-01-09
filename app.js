@@ -1,4 +1,4 @@
-const version_str = "0.8b2"
+const version_str = "0.8b3"
 const const_scanning_table_channel_index = 1;
 const const_scanning_table_channel_strength = 2;
 const const_time_tracking_channel_index = 1;
@@ -79,11 +79,14 @@ $("#btn_message_box_close").click(function(){
 });
 
 function fill_sample_time_data(){
-  for(var i = 0; i < time_tracking_adapter.listing().length; i++){
-    for(var x = 0; x < 6; x++){
-      if(Math.floor((Math.random() * 10) + 1) > 5){
-        push_time_tracking_data(i, 1000 + (i*(200 + x)),Date.now);
-      }
+  push_time_tracking_data(0, 1000,Date.now);
+  push_time_tracking_data(0, 1000,Date.now);
+  push_time_tracking_data(0, 1000,Date.now);
+  push_time_tracking_data(0, 6666,Date.now);
+  for(var i = 0; i < 8; i++){
+    for(var x = 0; x < 10; x++){
+        console.log("pi: " + i + " lap:" + x);
+        push_time_tracking_data(i, 1000 + ((i+1)*(900 + x)),Date.now);
     }
   }
 }

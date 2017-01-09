@@ -25,7 +25,20 @@ time_tracking_adapter.push_time_tracking_data = function(pilot_index,ms,ts){
   };
 
   if(this.time_tracking_data[pilot_index]['lap_data'].length < this.max_laps){
+    // double entry filter
+    if(this.time_tracking_data[pilot_index]['lap_data'].length == 0){
       this.time_tracking_data[pilot_index]['lap_data'].push(t);
+      console.log("TTA: added "+ ms +"ms to pilot " + pilot_index + " lap:" + this.time_tracking_data[pilot_index]['lap_data'].length);
+    }else{
+      if(this.time_tracking_data[pilot_index]['lap_data'][this.time_tracking_data[pilot_index]['lap_data'].length-1]['ms'] != ms){
+        this.time_tracking_data[pilot_index]['lap_data'].push(t);
+        console.log("TTA: added "+ ms +"ms to pilot " + pilot_index + " lap:" + this.time_tracking_data[pilot_index]['lap_data'].length);
+      }else{
+        console.log("TTA: ignoring "+ ms +"ms to pilot " + pilot_index );
+      }
+    }   
+  }else{
+    console.log("TTA: pilot " + pilot_index + " reached max laps");
   }
 };
 

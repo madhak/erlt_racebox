@@ -1,0 +1,1 @@
+nwbuild -p osx64 .
