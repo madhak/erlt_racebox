@@ -1,4 +1,4 @@
-const version_str = "0.8b3"
+const version_str = "0.8b4"
 const const_scanning_table_channel_index = 1;
 const const_scanning_table_channel_strength = 2;
 const const_time_tracking_channel_index = 1;
