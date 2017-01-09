@@ -1,7 +1,7 @@
 {
   "name": "RaceBox",
   "main": "window.html",
-  "version": "0.8b3",
+  "version": "0.8b4",
   "window": {
     "icon": "icon-196.png",
     "toolbar": true,

@@ -6,13 +6,15 @@
     <link rel="stylesheet" href="assets/flipclock.css" >
     <link rel="stylesheet" href="assets/style.css">
     <script src="jquery-2.2.0.min.js" ></script>
-    <script src="bootstrap/js/bootstrap.min.js" ></script>
+
     <script src="serial_connection.js"></script>
     <script src="channel_data.js"></script>
     <script src="moment.min.js"></script>
     <script src="pouchdb-6.1.0.min.js"></script>
     <script src="database.js"></script>
     <script src="assets/flipclock.min.js"></script>
+    <script src="js/async.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js" ></script>
   </head>
   <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -121,8 +123,8 @@
                       <span class="glyphicon glyphicon-stop" aria-hidden="true"></span>
                       Stop Race
                     </button>
-                    <input type="checkbox" id="checkbox_random_startup" title="Random Startup">
-                      <span id="span_random_startup">Random Startup</div>
+                    <input type="checkbox" id="checkbox_random_startup" title="Random Startup" class="">
+                      <span id="span_random_startup">Random Startup</span>
                     </input>
                   </div>
                 </div>

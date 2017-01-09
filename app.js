@@ -48,7 +48,7 @@ function build_menu_bar(){
     label: 'Debug',
     submenu: debug_sub_menu
   }));
-  
+
   // Assign it to `window.menu` to get the menu displayed
   nw.Window.get().menu = menu;
 }
@@ -164,6 +164,50 @@ function waitForIO(writer, callback) {
   setTimeout(reentrant, 100);
 }
 
+function start_count_down(finish_callback){
+  var Beep_count = document.createElement("audio");
+  var Beep_start = document.createElement("audio");
+
+  Beep_start.src="sfx/Beep_start.wav";
+  Beep_start.preLoad=true;
+
+  Beep_count.src="sfx/Beep_count.wav";
+  Beep_count.preLoad=true;
+
+  async.series([
+    function(done_1) {
+      Beep_count.addEventListener("ended", function(){
+        console.log("finished");
+        Beep_count.removeEventListener("ended", this);
+        done_1();
+      }, false);
+      Beep_count.play();
+    },
+    function(done_2) {
+      Beep_count.addEventListener("ended", function(){
+        console.log("gfinished 2");
+        Beep_count.removeEventListener("ended", this);
+        done_2();
+      }, false);
+      Beep_count.play();
+    },
+    function(done_3) {
+      Beep_count.addEventListener("ended", function(){
+        Beep_count.removeEventListener("ended", this);
+        console.log("gfinished 3");
+        done_3();
+      }, false);
+      Beep_count.play();
+    },
+    function(done_4) {
+      Beep_start.play();
+      done_4(); // we don't wait! racers are fast ;)
+    }
+    ], function(err, results) {
+      finish_callback();
+    });
+}
+
 /* Function play beep countdown */
 function play_beep_count(){
   var Beep_count = document.createElement("audio");
@@ -191,10 +235,12 @@ function repeat_beep_count(callback, interval, repetitions, immediate) {
       if (repetitions == 0) {
         setTimeout(function () {
           play_beep_start()
+          enable_race_session();
         }, interval);
       }
     }
   }
+
   repetitions = repetitions || 0;
   interval = interval || 1000;
   if (immediate) {
@@ -289,8 +335,8 @@ var save_timing_data = function(){
 
 function start_race_session(){
   realtime_clock.reset();
-  realtime_clock.start(function(){});
-  connection.send("RST_TIMING\n");
+
+
   $("#button_start_race").hide();
   $("#checkbox_random_startup").hide();
   $("#span_random_startup").hide();
@@ -301,8 +347,17 @@ function start_race_session(){
     //checked
     var rand = Math.floor(Math.random() * 4) + 3;
     repeat_beep_count(play_beep_count,1000,rand);
+  }else{
+    start_count_down(function(){
+      enable_race_session();
+    });
   }
 
+}
+
+function enable_race_session(){
+  realtime_clock.start(function(){});
+  connection.send("RST_TIMING\n");
   time_tracking_enabled = true;
 
   time_tracking_adapter.reset();
@@ -350,7 +405,7 @@ function process_inc_vtx_channel(data){
     }else{
       channel_select.selectedIndex = c;
     }
-    
+
   }
 }
 
@@ -449,19 +504,19 @@ function setDefaultSmartSenseCutOffForSensor(sensor){
 function reset_sensor_to_default_value(sensor){
   console.log("reset_sensor_to_default_value " + sensor);
   setDefaultChannelForSensor(sensor);
-  
+
   window.setTimeout(function(){
     setDefaultSmartSenseCutOffForSensor(sensor);
   },500);
-  
+
 
   if(sensor < 8){
     window.setTimeout(function(){
       reset_sensor_to_default_value(sensor +1)
     }, 1000);
   }
-  
- 
+
+
 }
 
 // EVENT HANLDER FOR GUI
@@ -591,7 +646,7 @@ $("#btn_list_past_races").on("click",function(){
   database.pouch_db.allDocs({include_docs: true, descending: true}, function(err, doc) {
     document.getElementById("past_races_container").innerHTML = "";
     for(var row = 0; row < doc.rows.length; row++){
-      
+
       var header = document.createElement("h2");
       header.innerHTML = moment(doc.rows[row].doc._id).format('MMMM Do YYYY, h:mm:ss a');
       document.getElementById("past_races_container").appendChild(header);
